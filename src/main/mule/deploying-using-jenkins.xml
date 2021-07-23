@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 output application/json
 ---
 {
-	message: "Success after setup Jenkins"
+	message: "Success after setup Jenkins. Setup Jenkins to continues deploying after check github every two minutes"
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
