@@ -1,0 +1,21 @@
+#%RAML 1.0
+title: Test Deploying Using Jenkins
+
+/test:
+  get:
+    headers:
+      outputType:
+        type: string
+    queryParameters:
+      id:
+        type: string
+    responses:
+      200:
+        body:
+          application/json:
+            example:
+              {
+                "id": "2",
+                "type": "clothing",
+                "quantity": 200
+              }
