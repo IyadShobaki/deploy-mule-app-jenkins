@@ -1,9 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+<mule xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
+	<flow name="deploying-using-jenkinsFlow" doc:id="6263d357-afb6-423a-a2fd-40191f89fae9" >
+		<http:listener doc:name="Listener" doc:id="1f7e4624-12d7-44d4-9b5e-37f58c852384" config-ref="test-deploying-using-jenkins-httpListenerConfig" path="/python"/>
+		<ee:transform doc:name="Transform Message" doc:id="ea93f06b-714c-4318-bf6d-bf724cfa0b02" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"EmployeeDetails":{
+		"EmpId": "1234",
+		"FirstName": "Mike",
+		"LastName": "Tedy"
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<scripting:execute engine="python" doc:name="Execute" doc:id="862e3eda-8035-445c-aecc-84424a3b8a19" >
+			<scripting:code ><![CDATA[
+def factorial(n):
+	if n == 0: return 1
+	return n * factorial(n-1)
+test = factorial(10)
+
+result= [len(FirstName) , len(LastName) , test]]]></scripting:code>
+			<scripting:parameters ><![CDATA[#[{
+	FirstName: payload.EmployeeDetails.FirstName,
+	LastName: payload.EmployeeDetails.LastName
+}]]]></scripting:parameters>
+		</scripting:execute>
+		<ee:transform doc:name="Transform Message" doc:id="4e833127-0af7-48a7-97f7-f10481233637" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Total length": payload[0] + payload[1],
+	"Factorial(10)": payload[2]
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
 	<flow name="get-result" doc:id="c02a7dbe-5f4c-451f-9407-74ec040dbc13" >
 		<ee:transform doc:name="Transform Message" doc:id="30d67e5e-a072-428e-a12e-aabe1d6585aa" >
 			<ee:message >
