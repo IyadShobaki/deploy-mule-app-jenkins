@@ -6,22 +6,7 @@
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
-	<flow name="deploying-using-jenkinsFlow" doc:id="6263d357-afb6-423a-a2fd-40191f89fae9" >
-		<http:listener doc:name="Listener" doc:id="1f7e4624-12d7-44d4-9b5e-37f58c852384" config-ref="test-deploying-using-jenkins-httpListenerConfig" path="/python"/>
-		<ee:transform doc:name="Transform Message" doc:id="ea93f06b-714c-4318-bf6d-bf724cfa0b02" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
-output application/json
----
-{
-	"EmployeeDetails":{
-		"EmpId": "1234",
-		"FirstName": "Mike",
-		"LastName": "Tedy"
-	}
-}]]></ee:set-payload>
-			</ee:message>
-		</ee:transform>
+	<flow name="get-python-result" doc:id="6263d357-afb6-423a-a2fd-40191f89fae9" >
 		<scripting:execute engine="python" doc:name="Execute" doc:id="862e3eda-8035-445c-aecc-84424a3b8a19" >
 			<scripting:code ><![CDATA[
 def factorial(n):

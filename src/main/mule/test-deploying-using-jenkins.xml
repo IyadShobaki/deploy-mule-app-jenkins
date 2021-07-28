@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
-http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd">
-    <http:listener-config name="test-deploying-using-jenkins-httpListenerConfig">
-        <http:listener-connection host="0.0.0.0" port="8081" />
-    </http:listener-config>
-    <apikit:config name="test-deploying-using-jenkins-config" api="test-deploying-using-jenkins.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus"/>
-    <api-gateway:autodiscovery apiId="17100740" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="b61bad9e-e197-4710-baf2-082b834875ab" flowRef="test-deploying-using-jenkins-main" />
-	<flow name="test-deploying-using-jenkins-main">
-        <http:listener config-ref="test-deploying-using-jenkins-httpListenerConfig" path="/api/*">
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
+    <apikit:config name="test-deploying-using-jenkins-config" api="resource::77684d27-e529-4452-963b-c2bc725e5f8d:test-deploying-using-jenkins:1.0.1:raml:zip:test-deploying-using-jenkins.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="test-deploying-using-jenkins-main">
+        <http:listener path="/api/*" config-ref="httpListenerConfig">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body>#[payload]</http:body>
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
         <apikit:router config-ref="test-deploying-using-jenkins-config" />
@@ -99,13 +94,13 @@ output application/json
         </error-handler>
     </flow>
     <flow name="test-deploying-using-jenkins-console">
-        <http:listener config-ref="test-deploying-using-jenkins-httpListenerConfig" path="/console/*">
+        <http:listener path="/console/*" config-ref="httpListenerConfig">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body>#[payload]</http:body>
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
         <apikit:console config-ref="test-deploying-using-jenkins-config" />
@@ -138,6 +133,9 @@ output application/json
 }]]></ee:set-payload>
             </ee:message>
         </ee:transform>
-		<flow-ref doc:name="Flow Reference" doc:id="4df4f24d-5edc-406c-b52a-32d9a40df155" name="get-result"/>
+        <flow-ref doc:name="Flow Reference" doc:id="af40ce56-8f1d-41e9-b09f-38cc0ee6c541" name="get-result" />
+    </flow>
+    <flow name="post:\python:application\json:test-deploying-using-jenkins-config">
+		<flow-ref doc:name="Flow Reference" doc:id="f3a89862-0cfd-4015-8858-ed2dbe8104cd" name="get-python-result"/>
     </flow>
 </mule>
